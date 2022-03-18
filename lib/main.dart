@@ -36,38 +36,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final tileAmount = 3;
+  var tileAmount = 3;
   final globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    final randomNums =
-        randomNumbers(tileAmount * tileAmount, _Corner.values.length);
-    final colors = randomColors(tileAmount * tileAmount);
-    Widget tile =
-        _tileGrid(const Size(300, 300), tileAmount, randomNums, colors);
     return Scaffold(
       body: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [_downloadButton()],
-              ),
-            ],
-          ),
-          Screenshot(
-            controller: widget.screenshotController,
-            child: Center(
-              child: Container(
-                  color: Colors.white,
-                  height: 600 + 600 / tileAmount,
-                  width: 600 + 600 / tileAmount,
-                  child: _mirroredTiles(tile)),
-            ),
-          ),
+          _tiles(),
+          _controls(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -76,6 +54,120 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: const Icon(Icons.replay),
       ),
+    );
+  }
+
+  Screenshot<dynamic> _tiles() {
+    final randomNums =
+        randomNumbers(tileAmount * tileAmount, _Corner.values.length);
+    final colors = randomColors(tileAmount * tileAmount);
+    Widget tile =
+        _tileGrid(const Size(300, 300), tileAmount, randomNums, colors);
+    return Screenshot(
+      controller: widget.screenshotController,
+      child: Center(
+        child: FittedBox(
+          child: Container(
+              color: Colors.white,
+              height: 600 + 600 / tileAmount,
+              width: 600 + 600 / tileAmount,
+              child: _mirroredTiles(tile)),
+        ),
+      ),
+    );
+  }
+
+  Widget _controls() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _downloadButton(),
+            const SizedBox(height: 6),
+            _selectComplexity()
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _selectComplexity() {
+    return SizedBox(
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _iconRadioButton(4),
+            const SizedBox(width: 8.0),
+            _iconRadioButton(6),
+            const SizedBox(width: 8.0),
+            _iconRadioButton(8),
+            const SizedBox(width: 8.0),
+            _iconRadioButton(10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _iconRadioButton(int value) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _complexityIcon(value),
+        Radio(
+            value: value,
+            groupValue: tileAmount * 2,
+            onChanged: (_) {
+              setState(() {
+                tileAmount = value ~/ 2;
+              });
+            }),
+      ],
+    );
+  }
+
+  Widget _complexityIcon(int amount) {
+    return Column(
+      children: List.generate(
+        amount,
+        (index) {
+          return index.isEven
+              ? const SizedBox(height: 4)
+              : _complexityIconRow(amount);
+        },
+      )..add(
+          const SizedBox(height: 4),
+        ),
+    );
+  }
+
+  Row _complexityIconRow(int amount) {
+    return Row(
+      children: List.generate(
+        amount,
+        (index) {
+          return index.isEven
+              ? const SizedBox(width: 4)
+              : _complexityIconCircle();
+        },
+      )..add(
+          const SizedBox(width: 4),
+        ),
+    );
+  }
+
+  Container _complexityIconCircle() {
+    return Container(
+      height: 4,
+      width: 4,
+      decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.all(Radius.circular(4))),
     );
   }
 
