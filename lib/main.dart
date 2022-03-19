@@ -1,9 +1,10 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
-import 'dart:html' as html;
+
+import 'package:tiles/complexity_selector.dart';
+import 'package:tiles/download_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,8 +37,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var tileAmount = 3;
+  static const backgroundColor = Color(0xFFe9dbba);
+  static const colorPalet = [
+    Color(0xFFDEA540),
+    Color(0xFF306285),
+    Color(0xFF447955),
+    Color(0xFFA94230),
+    Color(0xFF424242),
+  ];
+
   final globalKey = GlobalKey();
+
+  var tileAmount = 3;
+  var currentColors = [
+    Color(0xFFDEA540),
+    Color(0xFF306285),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Center(
         child: FittedBox(
           child: Container(
-              color: Colors.white,
-              height: 600 + 600 / tileAmount,
-              width: 600 + 600 / tileAmount,
+              color: backgroundColor,
+              height: 800,
+              width: 800,
               child: _mirroredTiles(tile)),
         ),
       ),
@@ -84,90 +99,57 @@ class _MyHomePageState extends State<MyHomePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _downloadButton(),
+            DownloadButton(controller: widget.screenshotController),
             const SizedBox(height: 6),
-            _selectComplexity()
+            ComplexitySelector(
+              tileAmount: tileAmount,
+              changeTileAmount: (newTileAmount) {
+                setState(() {
+                  tileAmount = newTileAmount;
+                });
+              },
+            ),
+            const SizedBox(height: 6),
+            _colorSelector()
           ],
         ),
       ],
     );
   }
 
-  Widget _selectComplexity() {
-    return SizedBox(
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _iconRadioButton(4),
-            const SizedBox(width: 8.0),
-            _iconRadioButton(6),
-            const SizedBox(width: 8.0),
-            _iconRadioButton(8),
-            const SizedBox(width: 8.0),
-            _iconRadioButton(10),
-          ],
+  Widget _colorSelector() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: List.generate(
+          colorPalet.length,
+          (index) => _colorSetting(index),
         ),
       ),
     );
   }
 
-  Widget _iconRadioButton(int value) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _complexityIcon(value),
-        Radio(
-            value: value,
-            groupValue: tileAmount * 2,
-            onChanged: (_) {
+  Widget _colorSetting(int index) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(width: 30, height: 30, color: colorPalet[index]),
+          Checkbox(
+            value: currentColors.contains(colorPalet[index]),
+            onChanged: (val) {
               setState(() {
-                tileAmount = value ~/ 2;
+                val!
+                    ? currentColors.add(colorPalet[index])
+                    : currentColors.length > 1
+                        ? currentColors.remove(colorPalet[index])
+                        : null;
               });
-            }),
-      ],
-    );
-  }
-
-  Widget _complexityIcon(int amount) {
-    return Column(
-      children: List.generate(
-        amount,
-        (index) {
-          return index.isEven
-              ? const SizedBox(height: 4)
-              : _complexityIconRow(amount);
-        },
-      )..add(
-          const SizedBox(height: 4),
-        ),
-    );
-  }
-
-  Row _complexityIconRow(int amount) {
-    return Row(
-      children: List.generate(
-        amount,
-        (index) {
-          return index.isEven
-              ? const SizedBox(width: 4)
-              : _complexityIconCircle();
-        },
-      )..add(
-          const SizedBox(width: 4),
-        ),
-    );
-  }
-
-  Container _complexityIconCircle() {
-    return Container(
-      height: 4,
-      width: 4,
-      decoration: const BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.all(Radius.circular(4))),
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -202,29 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
-  }
-
-  Padding _downloadButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton.icon(
-          icon: const Icon(Icons.download_sharp),
-          onPressed: _downloadImage,
-          label: const Text('Download PNG')),
-    );
-  }
-
-  void _downloadImage() {
-    widget.screenshotController.capture().then((Uint8List? image) {
-      if (image != null) {
-        // final file = File.fromRawPath(image);
-        final pngBytes = image.buffer.asUint8List();
-        final blob = html.Blob(<dynamic>[pngBytes], 'application/octet-stream');
-        html.AnchorElement(href: html.Url.createObjectUrlFromBlob(blob))
-          ..setAttribute('download', 'tile.png')
-          ..click();
-      }
-    }).catchError((onError) {});
   }
 
   Widget _tileGrid(Size size, int horizontalTileCount, List<int> randomNums,
@@ -284,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final List<Color> colors = <Color>[];
     for (int i = 0; i < count; i++) {
       colors.add(
-        Random().nextBool() ? Colors.blue : Colors.amber,
+        currentColors[Random().nextInt(currentColors.length)],
       );
     }
     return colors;
