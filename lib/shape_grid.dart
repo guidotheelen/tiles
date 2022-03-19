@@ -21,18 +21,19 @@ class ShapeGrid extends StatelessWidget {
     return SizedBox(
       width: size.width,
       height: size.height,
-      child: GridView.builder(
+      child: GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: horizontalTileCount,
         ),
-        itemBuilder: (_, index) {
-          return Shape(
+        children: List.generate(
+          horizontalTileCount * horizontalTileCount,
+          (index) => Shape(
             size: size.width / horizontalTileCount,
             color: colors[index],
             corner: Corner.values[randomNums[index]],
-          );
-        },
-        itemCount: horizontalTileCount * horizontalTileCount,
+          ),
+        ),
+        primary: false,
       ),
     );
   }
