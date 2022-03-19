@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:tiles/color_selector.dart';
 
 import 'package:tiles/complexity_selector.dart';
 import 'package:tiles/download_button.dart';
@@ -110,46 +111,17 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             const SizedBox(height: 6),
-            _colorSelector()
+            ColorSelector(
+                colorPalet: colorPalet,
+                currentColors: currentColors,
+                changeCurrentColors: (newColors) {
+                  setState(() {
+                    currentColors = newColors;
+                  });
+                })
           ],
         ),
       ],
-    );
-  }
-
-  Widget _colorSelector() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: List.generate(
-          colorPalet.length,
-          (index) => _colorSetting(index),
-        ),
-      ),
-    );
-  }
-
-  Widget _colorSetting(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Container(width: 30, height: 30, color: colorPalet[index]),
-          Checkbox(
-            value: currentColors.contains(colorPalet[index]),
-            onChanged: (val) {
-              setState(() {
-                val!
-                    ? currentColors.add(colorPalet[index])
-                    : currentColors.length > 1
-                        ? currentColors.remove(colorPalet[index])
-                        : null;
-              });
-            },
-          ),
-        ],
-      ),
     );
   }
 
