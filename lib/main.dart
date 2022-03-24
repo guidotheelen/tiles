@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:tiles/color_selector.dart';
 
@@ -24,17 +25,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -50,13 +49,25 @@ class _MyHomePageState extends State<MyHomePage> {
     Color(0xFF424242),
   ];
 
+  final screenshotController = ScreenshotController();
   final globalKey = GlobalKey();
+  final widthController = TextEditingController();
+  final heightController = TextEditingController();
 
-  var tileAmount = 3;
+  var horizontalTileCount = 3;
+  var verticalTileCount = 3;
   var currentColors = [
     const Color(0xFFDEA540),
     const Color(0xFF306285),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widthController.text = horizontalTileCount.toString();
+    heightController.text = verticalTileCount.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,17 +88,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Screenshot<dynamic> _tiles() {
-    final randomNums =
-        randomNumbers(tileAmount * tileAmount, Corner.values.length);
-    final colors = randomColors(tileAmount * tileAmount);
-    Widget tile = ShapeGrid(
+    final amount = horizontalTileCount * verticalTileCount;
+    final randomNums = randomNumbers(amount, Corner.values.length);
+    final colors = randomColors(amount);
+    final tile = ShapeGrid(
       size: const Size(300, 300),
-      horizontalTileCount: tileAmount,
+      horizontalTileCount: horizontalTileCount,
+      verticalTileCount: verticalTileCount,
       randomNums: randomNums,
       colors: colors,
     );
     return Screenshot(
-      controller: widget.screenshotController,
+      controller: screenshotController,
       child: Center(
         child: FittedBox(
           child: Container(
@@ -107,15 +119,23 @@ class _MyHomePageState extends State<MyHomePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            DownloadButton(controller: widget.screenshotController),
+            DownloadButton(controller: screenshotController),
             const SizedBox(height: 6),
-            ComplexitySelector(
-              tileAmount: tileAmount,
-              changeTileAmount: (newTileAmount) {
-                setState(() {
-                  tileAmount = newTileAmount;
-                });
-              },
+            Row(
+              children: [
+                _sizeInput('Width', widthController, (val) {
+                  setState(() {
+                    horizontalTileCount = val;
+                  });
+                }),
+                const SizedBox(width: 6),
+                _sizeInput('Height', heightController, (val) {
+                  setState(() {
+                    verticalTileCount = val;
+                  });
+                }),
+                const SizedBox(width: 6)
+              ],
             ),
             const SizedBox(height: 6),
             ColorSelector(
@@ -129,6 +149,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ],
+    );
+  }
+
+  SizedBox _sizeInput(
+      String text, TextEditingController controller, Function(int) setSize) {
+    return SizedBox(
+      width: 80,
+      child: TextField(
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
+        controller: controller,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          labelText: text,
+        ),
+        onChanged: (val) => setSize(int.parse(val)),
+      ),
     );
   }
 

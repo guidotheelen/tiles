@@ -5,6 +5,7 @@ import 'package:tiles/shape.dart';
 class ShapeGrid extends StatelessWidget {
   final Size size;
   final int horizontalTileCount;
+  final int verticalTileCount;
   final List<Color> colors;
   final List<int> randomNums;
 
@@ -12,6 +13,7 @@ class ShapeGrid extends StatelessWidget {
     Key? key,
     required this.size,
     required this.horizontalTileCount,
+    required this.verticalTileCount,
     required this.colors,
     required this.randomNums,
   }) : super(key: key);
@@ -26,7 +28,7 @@ class ShapeGrid extends StatelessWidget {
           crossAxisCount: horizontalTileCount,
         ),
         children: List.generate(
-          horizontalTileCount * horizontalTileCount,
+          horizontalTileCount * verticalTileCount,
           (index) => Shape(
             size: size.width / horizontalTileCount,
             color: colors[index],
