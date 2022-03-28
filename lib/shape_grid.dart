@@ -29,12 +29,14 @@ class ShapeGrid extends StatelessWidget {
           (yIndex) => Row(
             children: List.generate(
               verticalTileCount,
-              (xIndex) => Shape(
-                size: size.width / horizontalTileCount,
-                color: colors[yIndex * verticalTileCount + xIndex],
-                corner: Corner
-                    .values[randomNums[yIndex * verticalTileCount + xIndex]],
-              ),
+              (xIndex) {
+                final index = yIndex * verticalTileCount + xIndex;
+                return Shape(
+                  size: size.width / horizontalTileCount,
+                  color: colors[index],
+                  corner: Corner.values[randomNums[index]],
+                );
+              },
             ),
           ),
         ),
