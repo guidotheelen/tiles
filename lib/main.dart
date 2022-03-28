@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:tiles/color_selector.dart';
 
-import 'package:tiles/complexity_selector.dart';
 import 'package:tiles/download_button.dart';
 import 'package:tiles/mirored_tiles.dart';
 import 'package:tiles/shape.dart';
@@ -56,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var horizontalTileCount = 3;
   var verticalTileCount = 3;
+  var mirroredHorizontal = true;
+  var mirroredVertical = true;
   var currentColors = [
     const Color(0xFFDEA540),
     const Color(0xFF306285),
@@ -63,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widthController.text = horizontalTileCount.toString();
     heightController.text = verticalTileCount.toString();
@@ -92,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final randomNums = randomNumbers(amount, Corner.values.length);
     final colors = randomColors(amount);
     final tile = ShapeGrid(
-      size: const Size(300, 300),
       horizontalTileCount: horizontalTileCount,
       verticalTileCount: verticalTileCount,
       randomNums: randomNums,
@@ -103,10 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Center(
         child: FittedBox(
           child: Container(
-              color: backgroundColor,
-              height: 800,
-              width: 800,
-              child: MiroredTiles(tile: tile)),
+            color: backgroundColor,
+            height: 800,
+            width: 800,
+            child: MiroredTiles(
+              tile: tile,
+              mirroredHorizontal: mirroredHorizontal,
+              mirroredVertical: mirroredVertical,
+            ),
+          ),
         ),
       ),
     );
@@ -119,6 +123,16 @@ class _MyHomePageState extends State<MyHomePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                right: 8.0,
+              ),
+              child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.dashboard),
+                  label: const Text('Download SVG')),
+            ),
             DownloadButton(controller: screenshotController),
             const SizedBox(height: 6),
             Row(

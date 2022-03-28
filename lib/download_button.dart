@@ -17,7 +17,7 @@ class DownloadButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton.icon(
-          icon: const Icon(Icons.download_sharp),
+          icon: const Icon(Icons.image),
           onPressed: _downloadImage,
           label: const Text('Download PNG')),
     );
