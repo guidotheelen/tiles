@@ -4,23 +4,25 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 
-class DownloadButton extends StatelessWidget {
+class PNGDownloadButton extends StatelessWidget {
   final ScreenshotController controller;
 
-  const DownloadButton({
+  const PNGDownloadButton({
     Key? key,
     required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton.icon(
-          icon: const Icon(Icons.image),
-          onPressed: _downloadImage,
-          label: const Text('Download PNG')),
-    );
+    return ElevatedButton.icon(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            const Color(0xFF306285),
+          ),
+        ),
+        icon: const Icon(Icons.image),
+        onPressed: _downloadImage,
+        label: const Text('Download PNG'));
   }
 
   void _downloadImage() {

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:tiles/color_selector.dart';
 
-import 'package:tiles/download_button.dart';
+import 'package:tiles/png_download_button.dart';
 import 'package:tiles/mirored_tiles.dart';
 import 'package:tiles/shape.dart';
 import 'package:tiles/shape_grid.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Tiles',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        accentColor: const Color(0xFF306285),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -72,10 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _tiles(),
           _controls(),
+          _tiles(),
+          Container(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -87,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Screenshot<dynamic> _tiles() {
+  Widget _tiles() {
     final amount = horizontalTileCount * verticalTileCount;
     final randomNums = randomNumbers(amount, Corner.values.length);
     final colors = randomColors(amount);
@@ -117,59 +119,79 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _controls() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-                right: 8.0,
-              ),
-              child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.dashboard),
-                  label: const Text('Download SVG')),
-            ),
-            DownloadButton(controller: screenshotController),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                _sizeInput('Width', widthController, (val) {
-                  setState(() {
-                    horizontalTileCount = val;
-                  });
-                }),
-                const SizedBox(width: 6),
-                _sizeInput('Height', heightController, (val) {
-                  setState(() {
-                    verticalTileCount = val;
-                  });
-                }),
-                const SizedBox(width: 6)
-              ],
-            ),
-            const SizedBox(height: 6),
-            ColorSelector(
+    return Container(
+      decoration: const BoxDecoration(color: backgroundColor),
+      child: Column(
+        children: [
+          _sizeUnit(10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _sizeUnit(),
+              _complexitySelector(),
+              _sizeUnit(),
+              ColorSelector(
                 colorPalet: colorPalet,
                 currentColors: currentColors,
                 changeCurrentColors: (newColors) {
                   setState(() {
                     currentColors = newColors;
                   });
-                })
-          ],
+                },
+              ),
+              Expanded(child: Container()),
+              _sizeUnit(),
+              // _svgDownloadButton(),
+              // _sizeUnit(),
+              PNGDownloadButton(controller: screenshotController),
+              _sizeUnit(),
+            ],
+          ),
+          _sizeUnit(10),
+        ],
+      ),
+    );
+  }
+
+  ElevatedButton _svgDownloadButton() {
+    return ElevatedButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.dashboard),
+        label: const Text('Download SVG'));
+  }
+
+  Row _complexitySelector() {
+    return Row(
+      children: [
+        _sizeInput('Width', widthController, (val) {
+          setState(() {
+            horizontalTileCount = val;
+          });
+        }),
+        _sizeUnit(),
+        _sizeInput(
+          'Height',
+          heightController,
+          (val) {
+            setState(() {
+              verticalTileCount = val;
+            });
+          },
         ),
       ],
     );
   }
 
+  SizedBox _sizeUnit([double? size]) => SizedBox(
+        width: size ?? 6,
+        height: size ?? 6,
+      );
+
   SizedBox _sizeInput(
       String text, TextEditingController controller, Function(int) setSize) {
     return SizedBox(
       width: 80,
+      height: 40,
       child: TextField(
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
