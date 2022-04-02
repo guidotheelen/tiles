@@ -55,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var horizontalTileCount = 3;
   var verticalTileCount = 3;
-  var mirroredHorizontal = true;
-  var mirroredVertical = true;
+  var mirroredHorizontally = true;
+  var mirroredVertically = true;
   var currentColors = [
     const Color(0xFFDEA540),
     const Color(0xFF306285),
@@ -109,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 800,
             child: MiroredTiles(
               tile: tile,
-              mirroredHorizontal: mirroredHorizontal,
-              mirroredVertical: mirroredVertical,
+              mirroredHorizontal: mirroredHorizontally,
+              mirroredVertical: mirroredVertically,
             ),
           ),
         ),
@@ -120,7 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _controls() {
     return Container(
-      decoration: const BoxDecoration(color: backgroundColor),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5,
+          ),
+        ],
+      ),
       child: Column(
         children: [
           _sizeUnit(10),
@@ -138,6 +146,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     currentColors = newColors;
                   });
                 },
+              ),
+              Column(
+                children: [
+                  const Icon(Icons.vertical_distribute),
+                  Checkbox(
+                    value: mirroredHorizontally,
+                    onChanged: (_) => setState(() {
+                      mirroredHorizontally = !mirroredHorizontally;
+                    }),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  const Icon(Icons.horizontal_distribute),
+                  Checkbox(
+                    value: mirroredVertically,
+                    onChanged: (_) => setState(() {
+                      mirroredVertically = !mirroredVertically;
+                    }),
+                  )
+                ],
               ),
               Expanded(child: Container()),
               _sizeUnit(),
