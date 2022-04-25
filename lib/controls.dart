@@ -12,7 +12,7 @@ class Controls extends StatelessWidget {
   final TextEditingController heightController;
   final List<Color> colorPalet;
   final List<Color> currentColors;
-  final Map<Shape, Widget> shapes;
+  final Map<Shape, Function> shapes;
   final List<Shape> currentShapes;
   final int horizontalTileCount;
   final int verticalTileCount;
@@ -93,9 +93,9 @@ class Controls extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _sizeUnit(),
-              for (MapEntry<Shape, Widget> shape in shapes.entries)
+              for (MapEntry<Shape, Function> shape in shapes.entries)
                 _iconCheckbox(
-                  shape.value,
+                  shape.value.call(Colors.black54),
                   currentShapes.contains(shape.key),
                   () => switchShape(shape.key),
                 ),

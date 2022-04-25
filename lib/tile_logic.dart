@@ -15,43 +15,44 @@ class TileLogic {
   ];
 
   final shapePalet = {
-    Shape.roundedCornerTopLeft: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topLeft]),
-    Shape.roundedCornerTopRight: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topRight]),
-    Shape.roundedCornerBottomLeft: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.bottomLeft]),
-    Shape.roundedCornerBottomRight: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.bottomRight]),
-    Shape.roundedCornerAll: const RoundedCornerShape(
-        color: Colors.black54,
-        corners: [
-          Corner.topLeft,
-          Corner.topRight,
-          Corner.bottomLeft,
-          Corner.bottomRight
-        ]),
-    Shape.roundedCornerTopLeftBottomRight: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topLeft, Corner.bottomRight]),
-    Shape.roundedCornerTopRightBottomLeft: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topRight, Corner.bottomLeft]),
-    Shape.roundedCornerTopLeftBottomLeft: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topLeft, Corner.bottomLeft]),
-    Shape.roundedCornerTopRightBottomRight: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topRight, Corner.bottomRight]),
-    Shape.roundedCornerBottomLeftBottomRight: const RoundedCornerShape(
-        color: Colors.black54,
-        corners: [Corner.bottomLeft, Corner.bottomRight]),
-    Shape.roundedCornerBottomLeftTopLeft: const RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.bottomLeft, Corner.topLeft]),
-    Shape.triangleTopLeft:
-        const TriangleShape(color: Colors.black54, corner: Corner.topLeft),
-    Shape.triangleTopRight:
-        const TriangleShape(color: Colors.black54, corner: Corner.topRight),
-    Shape.triangleBottomLeft:
-        const TriangleShape(color: Colors.black54, corner: Corner.bottomLeft),
-    Shape.triangleBottomRight:
-        const TriangleShape(color: Colors.black54, corner: Corner.bottomRight),
+    Shape.roundedCornerTopLeft: (Color color) =>
+        RoundedCornerShape(color: color, corners: const [Corner.topLeft]),
+    Shape.roundedCornerTopRight: (Color color) =>
+        RoundedCornerShape(color: color, corners: const [Corner.topRight]),
+    Shape.roundedCornerBottomLeft: (Color color) =>
+        RoundedCornerShape(color: color, corners: const [Corner.bottomLeft]),
+    Shape.roundedCornerBottomRight: (Color color) =>
+        RoundedCornerShape(color: color, corners: const [Corner.bottomRight]),
+    Shape.roundedCornerAll: (Color color) => RoundedCornerShape(
+            color: color,
+            corners: const [
+              Corner.topLeft,
+              Corner.topRight,
+              Corner.bottomLeft,
+              Corner.bottomRight
+            ]),
+    Shape.roundedCornerTopLeftBottomRight: (Color color) => RoundedCornerShape(
+        color: color, corners: const [Corner.topLeft, Corner.bottomRight]),
+    Shape.roundedCornerTopRightBottomLeft: (Color color) => RoundedCornerShape(
+        color: color, corners: const [Corner.topRight, Corner.bottomLeft]),
+    Shape.roundedCornerTopLeftBottomLeft: (Color color) => RoundedCornerShape(
+        color: color, corners: const [Corner.topLeft, Corner.bottomLeft]),
+    Shape.roundedCornerTopRightBottomRight: (Color color) => RoundedCornerShape(
+        color: color, corners: const [Corner.topRight, Corner.bottomRight]),
+    Shape.roundedCornerBottomLeftBottomRight: (Color color) =>
+        RoundedCornerShape(
+            color: color,
+            corners: const [Corner.bottomLeft, Corner.bottomRight]),
+    Shape.roundedCornerBottomLeftTopLeft: (Color color) => RoundedCornerShape(
+        color: color, corners: const [Corner.bottomLeft, Corner.topLeft]),
+    Shape.triangleTopLeft: (Color color) =>
+        TriangleShape(color: color, corner: Corner.topLeft),
+    Shape.triangleTopRight: (Color color) =>
+        TriangleShape(color: color, corner: Corner.topRight),
+    Shape.triangleBottomLeft: (Color color) =>
+        TriangleShape(color: color, corner: Corner.bottomLeft),
+    Shape.triangleBottomRight: (Color color) =>
+        TriangleShape(color: color, corner: Corner.bottomRight),
   };
 
   var currentShapes = [

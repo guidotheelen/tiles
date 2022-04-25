@@ -8,7 +8,7 @@ class ShapeGrid extends StatelessWidget {
   final List<Color> colors;
   final List<int> randomNums;
   final List<Shape> currentShapes;
-  final Map<Shape, Widget> shapes;
+  final Map<Shape, Function> shapes;
 
   const ShapeGrid({
     Key? key,
@@ -30,7 +30,9 @@ class ShapeGrid extends StatelessWidget {
             horizontalTileCount,
             (xIndex) {
               final index = yIndex * horizontalTileCount + xIndex;
-              return shapes[currentShapes[randomNums[index]]] ?? Container();
+              final color = colors[index];
+              return shapes[currentShapes[randomNums[index]]]?.call(color) ??
+                  Container();
             },
           ),
         ),

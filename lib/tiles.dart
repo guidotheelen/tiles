@@ -17,7 +17,7 @@ class Tiles extends StatelessWidget {
   final Function(int count) randomColorList;
   final Function(int count, int max) randomNumbers;
   final List<Shape> currentShapes;
-  final Map<Shape, Widget> shapes;
+  final Map<Shape, Function> shapes;
 
   const Tiles({
     Key? key,
