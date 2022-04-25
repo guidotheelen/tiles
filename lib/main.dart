@@ -1,14 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:tiles/color_selector.dart';
 
 import 'package:tiles/png_download_button.dart';
-import 'package:tiles/mirored_tiles.dart';
-import 'package:tiles/shape.dart';
-import 'package:tiles/shape_grid.dart';
+import 'package:tiles/tile_logic.dart';
+import 'package:tiles/tiles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,34 +36,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const backgroundColor = Color(0xFFe9dbba);
-  static const colorPalet = [
-    Color(0xFFDEA540),
-    Color(0xFF306285),
-    Color(0xFF447955),
-    Color(0xFFA94230),
-    Color(0xFF424242),
-  ];
-
   final screenshotController = ScreenshotController();
   final globalKey = GlobalKey();
   final widthController = TextEditingController();
   final heightController = TextEditingController();
-
-  var horizontalTileCount = 3;
-  var verticalTileCount = 3;
-  var mirroredHorizontally = true;
-  var mirroredVertically = true;
-  var currentColors = [
-    const Color(0xFFDEA540),
-    const Color(0xFF306285),
-  ];
+  final logic = TileLogic();
 
   @override
   void initState() {
     super.initState();
-    widthController.text = horizontalTileCount.toString();
-    heightController.text = verticalTileCount.toString();
+    widthController.text = logic.horizontalTileCount.toString();
+    heightController.text = logic.verticalTileCount.toString();
   }
 
   @override
@@ -76,7 +56,17 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _controls(),
-          _tiles(),
+          Tiles(
+            screenshotController: screenshotController,
+            backgroundColor: logic.backgroundColor,
+            mirroredHorizontally: logic.mirroredHorizontally,
+            mirroredVertically: logic.mirroredVertically,
+            horizontalTileCount: logic.horizontalTileCount,
+            verticalTileCount: logic.verticalTileCount,
+            colors: logic.currentColors,
+            randomColorList: logic.randomColorList,
+            randomNumbers: logic.randomNumberList,
+          ),
           Container(),
         ],
       ),
@@ -85,35 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {});
         },
         child: const Icon(Icons.replay),
-      ),
-    );
-  }
-
-  Widget _tiles() {
-    final amount = horizontalTileCount * verticalTileCount;
-    final randomNums = randomNumbers(amount, Corner.values.length);
-    final colors = randomColors(amount);
-    final tile = ShapeGrid(
-      horizontalTileCount: horizontalTileCount,
-      verticalTileCount: verticalTileCount,
-      randomNums: randomNums,
-      colors: colors,
-    );
-    return Screenshot(
-      controller: screenshotController,
-      child: Center(
-        child: FittedBox(
-          child: Container(
-            color: backgroundColor,
-            height: 800,
-            width: 800,
-            child: MiroredTiles(
-              tile: tile,
-              mirroredHorizontal: mirroredHorizontally,
-              mirroredVertical: mirroredVertically,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -139,11 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
               _complexitySelector(),
               _sizeUnit(),
               ColorSelector(
-                colorPalet: colorPalet,
-                currentColors: currentColors,
+                colorPalet: logic.colorPalet,
+                currentColors: logic.currentColors,
                 changeCurrentColors: (newColors) {
                   setState(() {
-                    currentColors = newColors;
+                    logic.currentColors = newColors;
                   });
                 },
               ),
@@ -151,9 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const Icon(Icons.vertical_distribute),
                   Checkbox(
-                    value: mirroredHorizontally,
+                    value: logic.mirroredHorizontally,
                     onChanged: (_) => setState(() {
-                      mirroredHorizontally = !mirroredHorizontally;
+                      logic.mirroredHorizontally = !logic.mirroredHorizontally;
                     }),
                   )
                 ],
@@ -162,9 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const Icon(Icons.horizontal_distribute),
                   Checkbox(
-                    value: mirroredVertically,
+                    value: logic.mirroredVertically,
                     onChanged: (_) => setState(() {
-                      mirroredVertically = !mirroredVertically;
+                      logic.mirroredVertically = !logic.mirroredVertically;
                     }),
                   )
                 ],
@@ -183,19 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  ElevatedButton _svgDownloadButton() {
-    return ElevatedButton.icon(
-        onPressed: () {},
-        icon: const Icon(Icons.dashboard),
-        label: const Text('Download SVG'));
-  }
-
   Row _complexitySelector() {
     return Row(
       children: [
         _sizeInput('Width', widthController, (val) {
           setState(() {
-            horizontalTileCount = val;
+            logic.horizontalTileCount = val;
           });
         }),
         _sizeUnit(),
@@ -204,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
           heightController,
           (val) {
             setState(() {
-              verticalTileCount = val;
+              logic.verticalTileCount = val;
             });
           },
         ),
@@ -234,23 +188,5 @@ class _MyHomePageState extends State<MyHomePage> {
         onChanged: (val) => setSize(int.parse(val)),
       ),
     );
-  }
-
-  List<int> randomNumbers(int count, int max) {
-    final List<int> numbers = <int>[];
-    for (int i = 0; i < count; i++) {
-      numbers.add(Random().nextInt(max));
-    }
-    return numbers;
-  }
-
-  List<Color> randomColors(int count) {
-    final List<Color> colors = <Color>[];
-    for (int i = 0; i < count; i++) {
-      colors.add(
-        currentColors[Random().nextInt(currentColors.length)],
-      );
-    }
-    return colors;
   }
 }
