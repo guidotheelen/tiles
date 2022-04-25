@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'tile_logic.dart';
+
 class RoundedCornerShape extends StatelessWidget {
   static const size = 20.0;
 
@@ -36,11 +38,4 @@ class RoundedCornerShape extends StatelessWidget {
       ),
     );
   }
-}
-
-enum Corner {
-  topLeft,
-  topRight,
-  bottomLeft,
-  bottomRight,
 }

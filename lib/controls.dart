@@ -4,7 +4,7 @@ import 'package:screenshot/screenshot.dart';
 
 import 'package:tiles/color_selector.dart';
 import 'package:tiles/png_download_button.dart';
-import 'package:tiles/rounded_corner_shape.dart';
+import 'package:tiles/tile_logic.dart';
 
 class Controls extends StatelessWidget {
   final ScreenshotController screenshotController;
@@ -12,7 +12,8 @@ class Controls extends StatelessWidget {
   final TextEditingController heightController;
   final List<Color> colorPalet;
   final List<Color> currentColors;
-  final List<Widget> shapes;
+  final Map<Shape, Widget> shapes;
+  final List<Shape> currentShapes;
   final int horizontalTileCount;
   final int verticalTileCount;
   final bool mirrorHorizontally;
@@ -20,6 +21,7 @@ class Controls extends StatelessWidget {
   final Function(List<Color>) setCurrentColors;
   final Function(int) setWidth;
   final Function(int) setHeight;
+  final Function(Shape) switchShape;
   final VoidCallback switchMirrorHorizontally;
   final VoidCallback switchMirrorVertically;
 
@@ -31,6 +33,7 @@ class Controls extends StatelessWidget {
     required this.colorPalet,
     required this.currentColors,
     required this.shapes,
+    required this.currentShapes,
     required this.horizontalTileCount,
     required this.verticalTileCount,
     required this.mirrorHorizontally,
@@ -38,6 +41,7 @@ class Controls extends StatelessWidget {
     required this.setCurrentColors,
     required this.setWidth,
     required this.setHeight,
+    required this.switchShape,
     required this.switchMirrorHorizontally,
     required this.switchMirrorVertically,
   }) : super(key: key);
@@ -71,7 +75,7 @@ class Controls extends StatelessWidget {
               _iconCheckbox(
                 const Icon(Icons.vertical_distribute),
                 mirrorHorizontally,
-                switchMirrorVertically,
+                switchMirrorHorizontally,
               ),
               _iconCheckbox(
                 const Icon(Icons.horizontal_distribute),
@@ -89,11 +93,11 @@ class Controls extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _sizeUnit(),
-              for (var i = 0; i < shapes.length; i++)
+              for (MapEntry<Shape, Widget> shape in shapes.entries)
                 _iconCheckbox(
-                  shapes[i],
-                  mirrorHorizontally,
-                  switchMirrorVertically,
+                  shape.value,
+                  currentShapes.contains(shape.key),
+                  () => switchShape(shape.key),
                 ),
             ],
           ),

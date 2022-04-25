@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 
-import 'package:tiles/rounded_corner_shape.dart';
 import 'package:tiles/shape_grid.dart';
+import 'package:tiles/tile_logic.dart';
 
 import 'mirored_tiles.dart';
 
@@ -16,6 +16,8 @@ class Tiles extends StatelessWidget {
   final List<Color> colors;
   final Function(int count) randomColorList;
   final Function(int count, int max) randomNumbers;
+  final List<Shape> currentShapes;
+  final Map<Shape, Widget> shapes;
 
   const Tiles({
     Key? key,
@@ -28,16 +30,20 @@ class Tiles extends StatelessWidget {
     required this.colors,
     required this.randomColorList,
     required this.randomNumbers,
+    required this.currentShapes,
+    required this.shapes,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final amount = horizontalTileCount * verticalTileCount;
-    final randomNums = randomNumbers(amount, Corner.values.length);
+    final randomNums = randomNumbers(amount, currentShapes.length);
     final colors = randomColorList(amount);
     final tile = ShapeGrid(
       horizontalTileCount: horizontalTileCount,
       verticalTileCount: verticalTileCount,
+      currentShapes: currentShapes,
+      shapes: shapes,
       randomNums: randomNums,
       colors: colors,
     );

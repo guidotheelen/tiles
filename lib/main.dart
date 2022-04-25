@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
             colorPalet: logic.colorPalet,
             currentColors: logic.currentColors,
             shapes: logic.shapePalet,
+            currentShapes: logic.currentShapes,
             horizontalTileCount: logic.horizontalTileCount,
             verticalTileCount: logic.verticalTileCount,
             mirrorHorizontally: logic.mirrorHorizontally,
@@ -83,6 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
               logic.horizontalTileCount = width;
               setState(() {});
             },
+            switchShape: (shape) {
+              logic.switchShape(shape);
+              setState(() {});
+            },
           ),
           Tiles(
             screenshotController: screenshotController,
@@ -94,6 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
             colors: logic.currentColors,
             randomColorList: logic.randomColorList,
             randomNumbers: logic.randomNumberList,
+            currentShapes: logic.currentShapes,
+            shapes: logic.shapePalet,
           ),
           Container(),
         ],

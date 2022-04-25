@@ -14,34 +14,52 @@ class TileLogic {
     Color(0xFF424242),
   ];
 
-  final shapePalet = const [
-    RoundedCornerShape(color: Colors.black54, corners: [Corner.topLeft]),
-    RoundedCornerShape(color: Colors.black54, corners: [Corner.topRight]),
-    RoundedCornerShape(color: Colors.black54, corners: [Corner.bottomLeft]),
-    RoundedCornerShape(color: Colors.black54, corners: [Corner.bottomRight]),
-    RoundedCornerShape(color: Colors.black54, corners: [
-      Corner.topRight,
-      Corner.bottomRight,
-      Corner.topLeft,
-      Corner.bottomLeft
-    ]),
-    RoundedCornerShape(
+  final shapePalet = {
+    Shape.roundedCornerTopLeft: const RoundedCornerShape(
+        color: Colors.black54, corners: [Corner.topLeft]),
+    Shape.roundedCornerTopRight: const RoundedCornerShape(
+        color: Colors.black54, corners: [Corner.topRight]),
+    Shape.roundedCornerBottomLeft: const RoundedCornerShape(
+        color: Colors.black54, corners: [Corner.bottomLeft]),
+    Shape.roundedCornerBottomRight: const RoundedCornerShape(
+        color: Colors.black54, corners: [Corner.bottomRight]),
+    Shape.roundedCornerAll: const RoundedCornerShape(
+        color: Colors.black54,
+        corners: [
+          Corner.topLeft,
+          Corner.topRight,
+          Corner.bottomLeft,
+          Corner.bottomRight
+        ]),
+    Shape.roundedCornerTopLeftBottomRight: const RoundedCornerShape(
         color: Colors.black54, corners: [Corner.topLeft, Corner.bottomRight]),
-    RoundedCornerShape(
+    Shape.roundedCornerTopRightBottomLeft: const RoundedCornerShape(
         color: Colors.black54, corners: [Corner.topRight, Corner.bottomLeft]),
-    RoundedCornerShape(
+    Shape.roundedCornerTopLeftBottomLeft: const RoundedCornerShape(
         color: Colors.black54, corners: [Corner.topLeft, Corner.bottomLeft]),
-    RoundedCornerShape(
+    Shape.roundedCornerTopRightBottomRight: const RoundedCornerShape(
         color: Colors.black54, corners: [Corner.topRight, Corner.bottomRight]),
-    RoundedCornerShape(
+    Shape.roundedCornerBottomLeftBottomRight: const RoundedCornerShape(
         color: Colors.black54,
         corners: [Corner.bottomLeft, Corner.bottomRight]),
-    RoundedCornerShape(
-        color: Colors.black54, corners: [Corner.topLeft, Corner.topRight]),
-    TriangleShape(color: Colors.black54, corner: Corner.topLeft),
-    TriangleShape(color: Colors.black54, corner: Corner.topRight),
-    TriangleShape(color: Colors.black54, corner: Corner.bottomLeft),
-    TriangleShape(color: Colors.black54, corner: Corner.bottomRight),
+    Shape.roundedCornerBottomLeftTopLeft: const RoundedCornerShape(
+        color: Colors.black54, corners: [Corner.bottomLeft, Corner.topLeft]),
+    Shape.triangleTopLeft:
+        const TriangleShape(color: Colors.black54, corner: Corner.topLeft),
+    Shape.triangleTopRight:
+        const TriangleShape(color: Colors.black54, corner: Corner.topRight),
+    Shape.triangleBottomLeft:
+        const TriangleShape(color: Colors.black54, corner: Corner.bottomLeft),
+    Shape.triangleBottomRight:
+        const TriangleShape(color: Colors.black54, corner: Corner.bottomRight),
+  };
+
+  var currentShapes = [
+    Shape.roundedCornerTopLeft,
+    Shape.roundedCornerTopRight,
+    Shape.roundedCornerBottomLeft,
+    Shape.roundedCornerBottomRight,
+    Shape.roundedCornerAll,
   ];
 
   var currentColors = [
@@ -57,9 +75,42 @@ class TileLogic {
 
   switchMirrorVertically() => mirrorVertically = !mirrorVertically;
 
+  switchShape(Shape shape) {
+    if (currentShapes.contains(shape)) {
+      currentShapes.remove(shape);
+    } else {
+      currentShapes.add(shape);
+    }
+  }
+
   List<Color> randomColorList(int count) => List.generate(
       count, (_) => currentColors[Random().nextInt(currentColors.length)]);
 
   List<int> randomNumberList(int count, int max) =>
       List.generate(count, (_) => Random().nextInt(max));
+}
+
+enum Shape {
+  roundedCornerTopLeft,
+  roundedCornerTopRight,
+  roundedCornerBottomLeft,
+  roundedCornerBottomRight,
+  roundedCornerAll,
+  roundedCornerTopLeftBottomRight,
+  roundedCornerTopRightBottomLeft,
+  roundedCornerTopLeftBottomLeft,
+  roundedCornerTopRightBottomRight,
+  roundedCornerBottomLeftBottomRight,
+  roundedCornerBottomLeftTopLeft,
+  triangleTopLeft,
+  triangleTopRight,
+  triangleBottomLeft,
+  triangleBottomRight,
+}
+
+enum Corner {
+  topLeft,
+  topRight,
+  bottomLeft,
+  bottomRight,
 }

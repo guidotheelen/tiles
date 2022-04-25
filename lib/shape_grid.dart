@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:tiles/rounded_corner_shape.dart';
+import 'tile_logic.dart';
 
 class ShapeGrid extends StatelessWidget {
   final int horizontalTileCount;
   final int verticalTileCount;
   final List<Color> colors;
   final List<int> randomNums;
+  final List<Shape> currentShapes;
+  final Map<Shape, Widget> shapes;
 
   const ShapeGrid({
     Key? key,
@@ -14,6 +16,8 @@ class ShapeGrid extends StatelessWidget {
     required this.verticalTileCount,
     required this.colors,
     required this.randomNums,
+    required this.currentShapes,
+    required this.shapes,
   }) : super(key: key);
 
   @override
@@ -26,12 +30,7 @@ class ShapeGrid extends StatelessWidget {
             horizontalTileCount,
             (xIndex) {
               final index = yIndex * horizontalTileCount + xIndex;
-              return RoundedCornerShape(
-                color: colors[index],
-                corners: [
-                  Corner.values[0],
-                ],
-              );
+              return shapes[currentShapes[randomNums[index]]] ?? Container();
             },
           ),
         ),

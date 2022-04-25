@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'rounded_corner_shape.dart';
+import 'tile_logic.dart';
 
 class TriangleShape extends StatelessWidget {
   static const size = 20.0;
