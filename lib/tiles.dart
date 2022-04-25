@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 
-import 'package:tiles/shape.dart';
+import 'package:tiles/rounded_corner_shape.dart';
 import 'package:tiles/shape_grid.dart';
 
 import 'mirored_tiles.dart';

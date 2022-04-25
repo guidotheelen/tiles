@@ -4,6 +4,7 @@ import 'package:screenshot/screenshot.dart';
 
 import 'package:tiles/color_selector.dart';
 import 'package:tiles/png_download_button.dart';
+import 'package:tiles/rounded_corner_shape.dart';
 
 class Controls extends StatelessWidget {
   final ScreenshotController screenshotController;
@@ -11,6 +12,7 @@ class Controls extends StatelessWidget {
   final TextEditingController heightController;
   final List<Color> colorPalet;
   final List<Color> currentColors;
+  final List<Widget> shapes;
   final int horizontalTileCount;
   final int verticalTileCount;
   final bool mirrorHorizontally;
@@ -28,6 +30,7 @@ class Controls extends StatelessWidget {
     required this.heightController,
     required this.colorPalet,
     required this.currentColors,
+    required this.shapes,
     required this.horizontalTileCount,
     required this.verticalTileCount,
     required this.mirrorHorizontally,
@@ -65,23 +68,15 @@ class Controls extends StatelessWidget {
                 currentColors: currentColors,
                 changeCurrentColors: (newColors) => setCurrentColors(newColors),
               ),
-              Column(
-                children: [
-                  const Icon(Icons.vertical_distribute),
-                  Checkbox(
-                    value: mirrorHorizontally,
-                    onChanged: (_) => switchMirrorHorizontally(),
-                  )
-                ],
+              _iconCheckbox(
+                const Icon(Icons.vertical_distribute),
+                mirrorHorizontally,
+                switchMirrorVertically,
               ),
-              Column(
-                children: [
-                  const Icon(Icons.horizontal_distribute),
-                  Checkbox(
-                    value: mirrorVertically,
-                    onChanged: (_) => switchMirrorVertically(),
-                  )
-                ],
+              _iconCheckbox(
+                const Icon(Icons.horizontal_distribute),
+                mirrorVertically,
+                switchMirrorVertically,
               ),
               Expanded(child: Container()),
               _sizeUnit(),
@@ -90,10 +85,34 @@ class Controls extends StatelessWidget {
             ],
           ),
           _sizeUnit(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _sizeUnit(),
+              for (var i = 0; i < shapes.length; i++)
+                _iconCheckbox(
+                  shapes[i],
+                  mirrorHorizontally,
+                  switchMirrorVertically,
+                ),
+            ],
+          ),
+          _sizeUnit(),
         ],
       ),
     );
   }
+
+  Column _iconCheckbox(Widget icon, bool value, VoidCallback onChanged) =>
+      Column(
+        children: [
+          icon,
+          Checkbox(
+            value: value,
+            onChanged: (_) => onChanged(),
+          )
+        ],
+      );
 
   Row _complexitySelector() {
     return Row(

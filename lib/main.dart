@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
             heightController: heightController,
             colorPalet: logic.colorPalet,
             currentColors: logic.currentColors,
+            shapes: logic.shapePalet,
             horizontalTileCount: logic.horizontalTileCount,
             verticalTileCount: logic.verticalTileCount,
             mirrorHorizontally: logic.mirrorHorizontally,

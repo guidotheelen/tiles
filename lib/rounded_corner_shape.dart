@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Shape extends StatelessWidget {
+class RoundedCornerShape extends StatelessWidget {
   static const size = 20.0;
 
   final Color color;
-  final Corner corner;
+  final List<Corner> corners;
 
-  const Shape({
+  const RoundedCornerShape({
     Key? key,
     required this.color,
-    required this.corner,
+    required this.corners,
   }) : super(key: key);
 
   @override
@@ -20,16 +20,16 @@ class Shape extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.only(
-          topLeft: corner == Corner.topLeft || corner == Corner.all
+          topLeft: corners.contains(Corner.topLeft)
               ? const Radius.circular(size)
               : Radius.zero,
-          topRight: corner == Corner.topRight || corner == Corner.all
+          topRight: corners.contains(Corner.topRight)
               ? const Radius.circular(size)
               : Radius.zero,
-          bottomLeft: corner == Corner.bottomLeft || corner == Corner.all
+          bottomLeft: corners.contains(Corner.bottomLeft)
               ? const Radius.circular(size)
               : Radius.zero,
-          bottomRight: corner == Corner.bottomRight || corner == Corner.all
+          bottomRight: corners.contains(Corner.bottomRight)
               ? const Radius.circular(size)
               : Radius.zero,
         ),
@@ -43,5 +43,4 @@ enum Corner {
   topRight,
   bottomLeft,
   bottomRight,
-  all,
 }

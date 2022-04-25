@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:tiles/shape.dart';
+import 'package:tiles/rounded_corner_shape.dart';
 
 class ShapeGrid extends StatelessWidget {
   final int horizontalTileCount;
@@ -26,9 +26,11 @@ class ShapeGrid extends StatelessWidget {
             horizontalTileCount,
             (xIndex) {
               final index = yIndex * horizontalTileCount + xIndex;
-              return Shape(
+              return RoundedCornerShape(
                 color: colors[index],
-                corner: Corner.values[randomNums[index]],
+                corners: [
+                  Corner.values[0],
+                ],
               );
             },
           ),
