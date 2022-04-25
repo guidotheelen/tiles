@@ -18,8 +18,12 @@ class TileLogic {
   ];
   var horizontalTileCount = 3;
   var verticalTileCount = 3;
-  var mirroredHorizontally = true;
-  var mirroredVertically = true;
+  var mirrorHorizontally = true;
+  var mirrorVertically = true;
+
+  switchMirrorHorizontally() => mirrorHorizontally = !mirrorHorizontally;
+
+  switchMirrorVertically() => mirrorVertically = !mirrorVertically;
 
   List<Color> randomColorList(int count) => List.generate(
       count, (_) => currentColors[Random().nextInt(currentColors.length)]);

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:tiles/color_selector.dart';
-
-import 'package:tiles/png_download_button.dart';
+import 'package:tiles/controls.dart';
 import 'package:tiles/tile_logic.dart';
 import 'package:tiles/tiles.dart';
 
@@ -55,12 +52,42 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _controls(),
+          Controls(
+            screenshotController: screenshotController,
+            widthController: widthController,
+            heightController: heightController,
+            colorPalet: logic.colorPalet,
+            currentColors: logic.currentColors,
+            horizontalTileCount: logic.horizontalTileCount,
+            verticalTileCount: logic.verticalTileCount,
+            mirrorHorizontally: logic.mirrorHorizontally,
+            mirrorVertically: logic.mirrorVertically,
+            setCurrentColors: (colors) {
+              logic.currentColors = colors;
+              setState(() {});
+            },
+            switchMirrorHorizontally: () {
+              logic.switchMirrorHorizontally();
+              setState(() {});
+            },
+            switchMirrorVertically: () {
+              logic.switchMirrorVertically();
+              setState(() {});
+            },
+            setHeight: (height) {
+              logic.verticalTileCount = height;
+              setState(() {});
+            },
+            setWidth: (width) {
+              logic.horizontalTileCount = width;
+              setState(() {});
+            },
+          ),
           Tiles(
             screenshotController: screenshotController,
             backgroundColor: logic.backgroundColor,
-            mirroredHorizontally: logic.mirroredHorizontally,
-            mirroredVertically: logic.mirroredVertically,
+            mirroredHorizontally: logic.mirrorHorizontally,
+            mirroredVertically: logic.mirrorVertically,
             horizontalTileCount: logic.horizontalTileCount,
             verticalTileCount: logic.verticalTileCount,
             colors: logic.currentColors,
@@ -75,117 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {});
         },
         child: const Icon(Icons.replay),
-      ),
-    );
-  }
-
-  Widget _controls() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _sizeUnit(10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _sizeUnit(),
-              _complexitySelector(),
-              _sizeUnit(),
-              ColorSelector(
-                colorPalet: logic.colorPalet,
-                currentColors: logic.currentColors,
-                changeCurrentColors: (newColors) {
-                  setState(() {
-                    logic.currentColors = newColors;
-                  });
-                },
-              ),
-              Column(
-                children: [
-                  const Icon(Icons.vertical_distribute),
-                  Checkbox(
-                    value: logic.mirroredHorizontally,
-                    onChanged: (_) => setState(() {
-                      logic.mirroredHorizontally = !logic.mirroredHorizontally;
-                    }),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  const Icon(Icons.horizontal_distribute),
-                  Checkbox(
-                    value: logic.mirroredVertically,
-                    onChanged: (_) => setState(() {
-                      logic.mirroredVertically = !logic.mirroredVertically;
-                    }),
-                  )
-                ],
-              ),
-              Expanded(child: Container()),
-              _sizeUnit(),
-              // _svgDownloadButton(),
-              // _sizeUnit(),
-              PNGDownloadButton(controller: screenshotController),
-              _sizeUnit(),
-            ],
-          ),
-          _sizeUnit(10),
-        ],
-      ),
-    );
-  }
-
-  Row _complexitySelector() {
-    return Row(
-      children: [
-        _sizeInput('Width', widthController, (val) {
-          setState(() {
-            logic.horizontalTileCount = val;
-          });
-        }),
-        _sizeUnit(),
-        _sizeInput(
-          'Height',
-          heightController,
-          (val) {
-            setState(() {
-              logic.verticalTileCount = val;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  SizedBox _sizeUnit([double? size]) => SizedBox(
-        width: size ?? 6,
-        height: size ?? 6,
-      );
-
-  SizedBox _sizeInput(
-      String text, TextEditingController controller, Function(int) setSize) {
-    return SizedBox(
-      width: 80,
-      height: 40,
-      child: TextField(
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-        ],
-        controller: controller,
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          labelText: text,
-        ),
-        onChanged: (val) => setSize(int.parse(val)),
       ),
     );
   }
