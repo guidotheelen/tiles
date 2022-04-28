@@ -13,7 +13,6 @@ class TileLogic {
     Color(0xFFA94230),
     Color(0xFF424242),
   ];
-
   final shapePalet = {
     Shape.roundedCornerTopLeft: (Color color) =>
         RoundedCornerShape(color: color, corners: const [Corner.topLeft]),

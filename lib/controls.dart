@@ -91,8 +91,8 @@ class Controls extends StatelessWidget {
           _sizeUnit(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _sizeUnit(),
               for (MapEntry<Shape, Function> shape in shapes.entries)
                 _iconCheckbox(
                   shape.value.call(Colors.black54),
